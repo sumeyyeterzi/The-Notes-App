@@ -1,0 +1,14 @@
+# Android Studio
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+build/
+
+# Keystore dosyaları
+*.jks
+
+# Operating System dosyaları
+.DS_Store
+Thumbs.db
