@@ -3,7 +3,6 @@ package com.sumeyyaterzi.thenotesapp.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Query
 import com.sumeyyaterzi.thenotesapp.model.Note
 import com.sumeyyaterzi.thenotesapp.repository.NoteRepository
 import kotlinx.coroutines.launch
@@ -29,7 +28,7 @@ class NoteViewModel(app: Application,private val noteRepository: NoteRepository)
             noteRepository.updateNote(note)
         }
 
-    fun getAllNote() = noteRepository.getAllNotes()
+    fun getAllNotes() = noteRepository.getAllNotes()
 
     fun searchNote(query: String?) =
         noteRepository.searchNote(query)
