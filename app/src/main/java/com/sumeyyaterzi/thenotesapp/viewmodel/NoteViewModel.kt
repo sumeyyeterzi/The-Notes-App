@@ -23,7 +23,7 @@ class NoteViewModel(app: Application,private val noteRepository: NoteRepository)
 
 
 
-    fun editNote(note: Note) =
+    fun updateNote(note: Note) =
         viewModelScope.launch {
             noteRepository.updateNote(note)
         }

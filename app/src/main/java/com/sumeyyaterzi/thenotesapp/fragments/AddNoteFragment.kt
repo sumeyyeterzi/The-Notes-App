@@ -1,7 +1,6 @@
 package com.sumeyyaterzi.thenotesapp.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -11,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import com.sumeyyaterzi.thenotesapp.MainActivity
@@ -25,7 +25,7 @@ class AddNoteFragment : Fragment(R.layout.fragment_add_note),MenuProvider {
 private var addNoteBinding:FragmentAddNoteBinding?=null
     private val binding get() = addNoteBinding!!
 
-    private lateinit var noteViewModel: NoteViewModel
+    private lateinit var notesViewModel: NoteViewModel
     private lateinit var addNoteView:View
 
     override fun onCreateView(
@@ -33,7 +33,8 @@ private var addNoteBinding:FragmentAddNoteBinding?=null
         savedInstanceState: Bundle?,
     ): View? {
 
-      addNoteBinding=FragmentAddNoteBinding.inflate(inflater,container,false)
+
+        addNoteBinding = FragmentAddNoteBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -42,8 +43,8 @@ private var addNoteBinding:FragmentAddNoteBinding?=null
 
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        noteViewModel = (activity as MainActivity).noteViewModel
-addNoteView=view
+        notesViewModel = (activity as MainActivity).noteViewModel
+        addNoteView=view
 
 
     }
@@ -54,7 +55,7 @@ addNoteView=view
 
         if(noteTitle.isNotEmpty()){
             val note=Note(0,noteTitle,noteDesc)
-            noteViewModel.addNote(note)
+            notesViewModel.addNote(note)
             Toast.makeText(addNoteView.context,"Note Saved Successfully",Toast.LENGTH_LONG).show()
             view.findNavController().popBackStack(R.id.homeFragment,false)
 
