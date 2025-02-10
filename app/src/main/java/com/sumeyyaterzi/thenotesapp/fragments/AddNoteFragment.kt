@@ -1,87 +1,57 @@
 package com.sumeyyaterzi.thenotesapp.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import com.sumeyyaterzi.thenotesapp.MainActivity
 import com.sumeyyaterzi.thenotesapp.R
+import com.sumeyyaterzi.thenotesapp.base.BaseFragment
 import com.sumeyyaterzi.thenotesapp.databinding.FragmentAddNoteBinding
 import com.sumeyyaterzi.thenotesapp.model.Note
 import com.sumeyyaterzi.thenotesapp.viewmodel.NoteViewModel
 
-
-class AddNoteFragment : Fragment(R.layout.fragment_add_note),MenuProvider {
-
-private var addNoteBinding:FragmentAddNoteBinding?=null
-    private val binding get() = addNoteBinding!!
+class AddNoteFragment : BaseFragment<FragmentAddNoteBinding>(FragmentAddNoteBinding::inflate) {
 
     private lateinit var notesViewModel: NoteViewModel
-    private lateinit var addNoteView:View
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-
-
-        addNoteBinding = FragmentAddNoteBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    override fun setupUI() {
         notesViewModel = (activity as MainActivity).noteViewModel
-        addNoteView=view
-
-
     }
 
-    private fun saveNote(view: View){
-        val noteTitle=binding.addNoteTitle.text.toString().trim()
-        val noteDesc=binding.addNoteDesc.text.toString().trim()
+    override fun setupObservers() {
+        // Gerekirse ViewModel veya LiveData gözlemleri buraya eklenebilir
+    }
 
-        if(noteTitle.isNotEmpty()){
-            val note=Note(0,noteTitle,noteDesc)
+    private fun saveNote() {
+        val noteTitle = binding.addNoteTitle.text.toString().trim()
+        val noteDesc = binding.addNoteDesc.text.toString().trim()
+
+        if (noteTitle.isNotEmpty()) {
+            val note = Note(0, noteTitle, noteDesc)
             notesViewModel.addNote(note)
-            Toast.makeText(addNoteView.context,"Note Saved Successfully",Toast.LENGTH_LONG).show()
-            view.findNavController().popBackStack(R.id.homeFragment,false)
-
-        }else{
-            Toast.makeText(addNoteView.context,"Please enter note title",Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Note Saved Successfully", Toast.LENGTH_LONG).show()
+            requireView().findNavController().popBackStack(R.id.homeFragment, false)
+        } else {
+            Toast.makeText(requireContext(), "Please enter note title", Toast.LENGTH_LONG).show()
         }
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        menu.clear()
-        menuInflater.inflate(R.menu.menu_add_note,menu)
+        super.onCreateMenu(menu, menuInflater)
+        menuInflater.inflate(R.menu.menu_add_note, menu)
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-return when(menuItem.itemId){
-    R.id.saveMenu->{
-        saveNote(addNoteView)
-        true
+        return when (menuItem.itemId) {
+            R.id.saveMenu -> {
+                saveNote()
+                true
+            }
+            else -> super.onMenuItemSelected(menuItem)
+        }
     }
-    else->false
-}
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        addNoteBinding=null
-    }
-
 }
